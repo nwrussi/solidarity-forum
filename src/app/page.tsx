@@ -1,6 +1,6 @@
 import { getCategoriesWithSubforums, getForumStats, getRecentActiveThreads, getNewThreads } from '@/lib/queries';
-import CategorySection from '@/components/CategorySection';
-import Sidebar from '@/components/Sidebar';
+import CategorySection from '@/components/forum/CategorySection';
+import Sidebar from '@/components/sidebar/Sidebar';
 
 // Force dynamic rendering since we read from the database
 export const dynamic = 'force-dynamic';

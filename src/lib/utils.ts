@@ -82,7 +82,7 @@ export function stringToColor(str: string): string {
 /**
  * Escape HTML to prevent XSS when rendering user content.
  */
-export function escapeHtml(text: string): string {
+function escapeHtml(text: string): string {
   const map: Record<string, string> = {
     '&': '&amp;',
     '<': '&lt;',

@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Solidarity Forum
 
-## Getting Started
+An anonymous, persistent-account forum built with Next.js. No email or personal information required to register.
 
-First, run the development server:
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run seed    # populate database with sample data
+npm run dev     # start dev server at http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Test Accounts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Username    | Password   | Role      |
+|-------------|------------|-----------|
+| Admin       | admin123   | admin     |
+| Moderator   | mod123     | moderator |
+| AnonymousUser | user123  | member    |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Admin panel: http://localhost:3000/admin (admin login required)
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js 14+** (App Router) — pages and API routes
+- **TypeScript** — type safety
+- **Tailwind CSS** — styling
+- **SQLite** (better-sqlite3) — database
+- **bcrypt** — password hashing
+- **iron-session** — encrypted cookie sessions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+solidarity-forum/
+├── scripts/
+│   └── seed.ts                  # Database seed script (sample users, categories, threads)
+│
+├── src/
+│   ├── app/                     # Next.js App Router
+│   │   ├── layout.tsx           # Root layout (nav + footer + theme)
+│   │   ├── page.tsx             # Home — forum index with categories + sidebar
+│   │   ├── globals.css          # Global styles and CSS variables
+│   │   │
+│   │   ├── forum/[id]/          # Subforum — thread listing
+│   │   ├── thread/[id]/         # Thread — posts + reply form
+│   │   ├── login/               # Login page
+│   │   ├── register/            # Register page (username + password only)
+│   │   ├── new-thread/          # Create new thread
+│   │   ├── profile/[username]/  # User profile
+│   │   │
+│   │   ├── admin/               # Admin panel (admin/mod only)
+│   │   │   ├── layout.tsx       # Admin layout with sidebar nav
+│   │   │   ├── page.tsx         # Dashboard — stats overview
+│   │   │   ├── users/           # User management (ban, role changes)
+│   │   │   ├── threads/         # Thread moderation (sticky, lock, delete)
+│   │   │   ├── posts/           # Post moderation (edit, delete)
+│   │   │   ├── categories/      # Category/subforum management
+│   │   │   ├── reports/         # Reports queue
+│   │   │   └── customization/   # UI theme customization
+│   │   │
+│   │   └── api/                 # API Routes
+│   │       ├── auth/            # register, login, logout, me
+│   │       ├── threads/         # Create thread
+│   │       ├── posts/           # Create post/reply
+│   │       ├── reports/         # Submit report
+│   │       ├── subforums/       # List subforums
+│   │       ├── settings/theme/  # Public theme settings
+│   │       └── admin/           # Admin APIs (users, threads, posts, categories, subforums, reports, settings)
+│   │
+│   ├── components/
+│   │   ├── layout/              # Site-wide layout components
+│   │   │   ├── Navigation.tsx   # Header nav bar
+│   │   │   ├── Footer.tsx       # Site footer
+│   │   │   └── ThemeProvider.tsx # Applies theme CSS variables
+│   │   │
+│   │   ├── forum/               # Forum content display
+│   │   │   ├── CategorySection.tsx  # Collapsible category with subforums
+│   │   │   ├── SubforumRow.tsx      # Single subforum row
+│   │   │   ├── ThreadRow.tsx        # Single thread row
+│   │   │   ├── PostView.tsx         # Full post with author sidebar
+│   │   │   └── Breadcrumb.tsx       # Navigation breadcrumb
+│   │   │
+│   │   ├── forms/               # User input forms
+│   │   │   ├── LoginWidget.tsx  # Login form (sidebar + standalone)
+│   │   │   └── ReplyForm.tsx    # Thread reply form
+│   │   │
+│   │   ├── moderation/          # Inline mod tools (shown on forum pages)
+│   │   │   ├── ThreadModTools.tsx   # Sticky/lock/delete thread buttons
+│   │   │   └── PostActions.tsx      # Report/edit/delete post buttons
+│   │   │
+│   │   └── sidebar/             # Homepage sidebar
+│   │       └── Sidebar.tsx      # Active threads, stats, members online
+│   │
+│   └── lib/                     # Shared server-side logic
+│       ├── db.ts                # Database connection, schema, migrations
+│       ├── queries.ts           # Database query functions
+│       ├── session.ts           # Session management (iron-session)
+│       ├── settings.ts          # Forum customization settings read/write
+│       ├── types.ts             # Shared TypeScript interfaces
+│       └── utils.ts             # Formatting helpers (dates, counts, post rendering)
+│
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+├── postcss.config.mjs
+└── eslint.config.mjs
+```
 
-## Deploy on Vercel
+## Database
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+SQLite file at `forum.db` (auto-created on first run, gitignored).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Tables:** users, categories, subforums, threads, posts, reactions, private_messages, reports, forum_settings
+
+## Key Design Decisions
+
+- **No PII collected** — registration requires only username + password
+- **No email verification** — accounts are active immediately
+- **bcrypt** with 12 salt rounds for password hashing
+- **30-day sessions** via encrypted httpOnly cookies
+- **Parameterized SQL** everywhere to prevent injection
+- **CSS variables** for theming — customizable via admin panel

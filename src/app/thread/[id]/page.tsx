@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getThread, getPostsByThread } from '@/lib/queries';
-import Breadcrumb from '@/components/Breadcrumb';
-import PostView from '@/components/PostView';
-import ReplyForm from '@/components/ReplyForm';
-import ThreadModTools from '@/components/ThreadModTools';
+import Breadcrumb from '@/components/forum/Breadcrumb';
+import PostView from '@/components/forum/PostView';
+import ReplyForm from '@/components/forms/ReplyForm';
+import ThreadModTools from '@/components/moderation/ThreadModTools';
 
 export const dynamic = 'force-dynamic';
 

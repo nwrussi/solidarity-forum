@@ -56,18 +56,6 @@ export function getSettings(): Record<string, string> {
 }
 
 /**
- * Fetch a single setting by key, returning the default if not found.
- */
-export function getSetting(key: string): string {
-  const db = getDb();
-  const row = db.prepare('SELECT value FROM forum_settings WHERE key = ?').get(key) as { value: string } | undefined;
-  if (row) {
-    return row.value;
-  }
-  return DEFAULT_SETTINGS[key] ?? '';
-}
-
-/**
  * Update multiple settings at once.
  * Only updates keys that exist in DEFAULT_SETTINGS to prevent arbitrary data injection.
  */
@@ -110,21 +98,3 @@ export function resetSettings(): void {
   transaction();
 }
 
-/**
- * Seed the forum_settings table with default values if it is empty.
- */
-export function seedDefaultSettings(): void {
-  const db = getDb();
-  const count = (db.prepare('SELECT COUNT(*) as count FROM forum_settings').get() as { count: number }).count;
-  if (count === 0) {
-    const insert = db.prepare(`
-      INSERT INTO forum_settings (key, value) VALUES (?, ?)
-    `);
-    const transaction = db.transaction(() => {
-      for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {
-        insert.run(key, value);
-      }
-    });
-    transaction();
-  }
-}

@@ -89,24 +89,6 @@ export interface ForumStats {
   online_members: string[];
 }
 
-export interface Report {
-  id: number;
-  post_id: number;
-  reporter_id: string;
-  reason: string;
-  status: string;
-  created_at: string;
-  reviewed_by: string | null;
-  reviewed_at: string | null;
-  // Joined fields
-  reporter_username?: string;
-  post_content?: string;
-  post_author_username?: string;
-  post_author_id?: string;
-  thread_id?: number;
-  thread_title?: string;
-}
-
 export interface ModerationLog {
   id: number;
   moderator_id: string;

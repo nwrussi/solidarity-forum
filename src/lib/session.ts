@@ -1,3 +1,4 @@
+// Session management — iron-session encrypted cookies (userId, username, role)
 import { getIronSession, IronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 

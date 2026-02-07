@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ForumStats, Thread } from '@/lib/types';
 import { formatCount, formatRelativeTime } from '@/lib/utils';
-import LoginWidget from './LoginWidget';
+import LoginWidget from '@/components/forms/LoginWidget';
 
 interface SidebarProps {
   stats: ForumStats;

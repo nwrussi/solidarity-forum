@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSubforum, getThreadsBySubforum } from '@/lib/queries';
-import Breadcrumb from '@/components/Breadcrumb';
-import ThreadRow from '@/components/ThreadRow';
+import Breadcrumb from '@/components/forum/Breadcrumb';
+import ThreadRow from '@/components/forum/ThreadRow';
 
 export const dynamic = 'force-dynamic';
 

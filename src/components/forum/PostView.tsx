@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Post } from '@/lib/types';
 import { formatTimestamp, formatDate, stringToColor, renderPostContent } from '@/lib/utils';
-import PostActions from './PostActions';
+import PostActions from '@/components/moderation/PostActions';
 
 interface PostViewProps {
   post: Post;
